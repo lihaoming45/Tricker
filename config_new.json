@@ -1,0 +1,33 @@
+{
+    "configs":[
+        {
+            "username":"3150102282", 
+            "password":"zhout1997", 
+            "phone":"18067173220",
+            "buddies":[
+                {
+                    "username": "3160105538",
+                    "password": "jbyourself123"
+                  }
+            ],
+            "buddyname":["陈智超"]
+            },
+        {
+        "username":"12132083", 
+        "password":"lihaoming45", 
+        "phone":"18948195026",
+        "buddies":[
+            {
+                "username": "12132061",
+                "password": "alence98XYF"
+              }
+        ],
+        "buddyname":["项吟沨"]
+
+        }
+    ],
+    "place_id":39,
+    "n_site":1,
+    "date":"2022-06-24",
+    "candidate_time":["19:30", "20:30", "21:30"]
+}

@@ -12,14 +12,9 @@ from apscheduler.events import EVENT_JOB_EXECUTED, EVENT_JOB_ERROR, JobExecution
 from dateutil import tz
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--input', type=str)
-parser.add_argument('--mode', choices=['interval', 'once'])
-parser.add_argument('--start_time',
-                    default=datetime.datetime.now(tz.gettz('Asia/Shanghai')).strftime("%Y-%m-%d %H:%M:%S"),
-                    help='Required when mode == once')
-args = parser.parse_args()
-schedule = BlockingScheduler()
 
+
+schedule = BlockingScheduler()
 
 class Reserver:
     def __init__(self):
@@ -291,7 +286,7 @@ class User(object):
             self.sess = requests.Session()
             self.login()
             if mode == 'once':
-                time.sleep(60)
+                time.sleep(2)
             result = self.order(buddy_no, reserver)
             if result is not None and result["code"] == 200:
                 print('Success in {}'.format(datetime.datetime.now(tz.gettz('Asia/Shanghai'))))
@@ -377,4 +372,10 @@ def main():
 
 
 if __name__ == "__main__":
+    parser.add_argument('--input', default='./in.txt', type=str)
+    parser.add_argument('--mode',default='once', choices=['interval', 'once'])
+    parser.add_argument('--start_time',
+                        default=datetime.datetime.now(tz.gettz('Asia/Shanghai')).strftime("%Y-%m-%d %H:%M:%S"),
+                        help='Required when mode == once')
+    args = parser.parse_args()
     main()
