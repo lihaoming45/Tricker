@@ -5,26 +5,36 @@
 2. 在`main.py`所在目录下创建`config.json`，内容为统一身份验证的用户名和密码：
 ```json
 {
-  "username": "username",
-  "password": "password",
-  "buddies": [
-    {
-      "username": "username",
-      "password": "password"
-    },
-    {
-      "username": "username",
-      "password": "password"
-    }]
+    "configs":[
+        {
+            "username":"123456", 
+            "password":"qwert", 
+            "phone":"123456",
+            "buddies":[
+                {
+                    "username": "12345",
+                    "password": "12345"
+                  }
+            ],
+            "buddyname":["xxx"]
+            },
+        {
+        "username":"12345", 
+        "password":"qqqq", 
+        "phone":"12345",
+        "buddies":[
+            {
+                "username": "12345",
+                "password": "asdfg"
+              }
+        ],
+        "buddyname":["xxx"]
+
+        }
+    ],
+    "place_id":39,
+    "n_site":1,
+    "date":"2022-06-24",
+    "candidate_time":["19:30", "20:30", "21:30"]
 }
-```
-3. 输入的内容为此次脚本的预约内容，并保留在文件中如in.txt
-```
-39 （场地编号）
-2021-08-31 （预约日期）
-14:30 15:30 （预约场次的起始时间）
-2 （连续场数 1/2)
-伙伴名称（空格分隔）
-电话号码
-```
-4. 运行脚本：`python main.py --input ./in.txt --start_time xxx --mode interval`
+4. 运行脚本：main_new.py
