@@ -173,7 +173,8 @@ class User(object):
             space_id = None
             time_id = None
             flag = True
-            random.shuffle(info)
+            # random.shuffle(info)
+            info[0],info[1],info[2],info[3],info[4],info[5]=info[5],info[3],info[4],info[2],info[1],info[0],
             for space in info:
                 if flag:
                     for key, value in space.items():
@@ -292,8 +293,9 @@ class User(object):
         try:
             self.sess = requests.Session()
             self.login()
-            if mode == 'once':
-                time.sleep(2)
+            # if mode == 'once':
+            #     a=1
+            #     # time.sleep(2)
             result = self.order(buddy_no, reserver)
             if result is not None and result["code"] == 200:
                 print('Success in {}'.format(datetime.datetime.now(tz.gettz('Asia/Shanghai'))))
@@ -332,10 +334,10 @@ class LoginError(Exception):
 def listener(event):
     jobs = schedule.get_jobs()
     if event.retval is None:
-        if len(jobs) > 2:
+        if len(jobs) > 10:
             schedule.remove_job(schedule.get_jobs()[0].id)
     elif str(event.retval['code']) == '200':
-        if len(jobs) > 2:
+        if len(jobs) > 10:
             schedule.remove_job(schedule.get_jobs()[0].id)
 
     if len(jobs) == 0:
@@ -354,6 +356,7 @@ def job(user, buddies, reserver,config, mode):
 
 
 def main(cfgs):
+    schedule.add_listener(listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR)
     for config in cfgs["configs"]:
         username = config['username']
         password = config['password']
@@ -361,25 +364,30 @@ def main(cfgs):
         resever = Reserver(cfgs)
 
         main_user = User(username, password,config)
-
         print(args)
-        schedule.add_listener(listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR)
         if args.mode=='once':
             run_time = datetime.datetime.strptime(args.start_time, "%Y-%m-%d %H:%M:%S").replace(
             tzinfo=tz.gettz('Asia/Shanghai'))
-            run_time='2022-06-22 12:00:00'
+            run_time='2022-06-23 12:00:00'
             schedule.add_job(job, 'date', run_date=run_time, args=[main_user, config['buddies'], resever,config, args.mode])
             schedule.print_jobs()
             # schedule.start()
+        elif args.mode=='interval':
+            run_time='2022-06-24 12:00:00'
+            end_time = '2022-06-24 12:00:06'
+            schedule.add_job(job, 'interval', seconds=1, start_date=run_time, end_date=end_time, args=[main_user, config['buddies'], resever,config, args.mode])
+            schedule.print_jobs()
         else:
-            schedule.add_job(job,'cron',day='*', hour=12,second='1-5')
+            schedule.add_job(job,'cron',day='*', hour=12,second='0-5',args=[main_user, config['buddies'], resever,config, args.mode])
+            schedule.print_jobs()
+
     schedule.start()
 
     # job(main_user, config['buddies'], resever, args.mode)
 
 if __name__ == "__main__":
     # parser.add_argument('--input', default='./in.txt', type=str)
-    parser.add_argument('--mode',default='once', choices=['once','cron'])
+    parser.add_argument('--mode',default='interval', choices=['once','cron', 'interval'])
     
     parser.add_argument('--start_time',
                         default=datetime.datetime.now(tz.gettz('Asia/Shanghai')).strftime("%Y-%m-%d %H:%M:%S"),
